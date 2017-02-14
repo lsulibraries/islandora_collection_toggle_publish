@@ -1,6 +1,7 @@
 <?php
 
 defined("ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED") ? NULL : define("ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED", 'Administer published/unpublished collection setting.');
+defined("ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_DEFAULTS") ? NULL : define("ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_DEFAULTS", 'administer publish toggle defaults');
 
 /**
  * Implements hook_permission().
@@ -10,6 +11,10 @@ function islandora_collection_toggle_publish_permission() {
     ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED => array(
       'title' => t('Administer unpublished collection setting.'),
       'description' => t("Administer unpublished collection setting"),
+    ),
+    ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_DEFAULTS => array(
+      'title' => t('administer publish toggle defaults'),
+      'description' => t("administer publish toggle defaults"),
     ),
   );
 }
