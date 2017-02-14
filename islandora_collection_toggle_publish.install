@@ -2,8 +2,8 @@
 /**
  * Implements hook_schema().
  */
-function islandora_unpublish_schema() {
-  $schema['islandora_unpublish_collections'] = array(
+function islandora_collection_toggle_publish_schema() {
+  $schema['islandora_collection_toggle_publish_collections'] = array(
     'description' => 'Table that stores pids of unpublished collections.',
     'fields' => array(
       'id' => array(

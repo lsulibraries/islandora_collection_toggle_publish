@@ -1,6 +1,0 @@
-name = Islandora Unpublish
-dependencies[] = islandora
-description = Set collections unpublished.
-package = Islandora
-version = 7.x
-core = 7.x
