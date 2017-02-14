@@ -14,6 +14,24 @@ function islandora_collection_toggle_publish_permission() {
   );
 }
 
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_collection_toggle_publish_menu() {
+  return array(
+    'admin/islandora/tools/collection_toggle_publish' => array(
+      'title' => 'Islandora Collection Toggle Publish',
+      'description' => 'Default publication settings for collections.',
+      'type' => MENU_NORMAL_ITEM,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('islandora_collection_toggle_publish_settings_form'),
+      'file' => 'includes/forms.inc',
+      'access arguments' => array(ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_DEFAULTS),
+    ),
+  );
+}
+
 /**
  * Implements hook_form_islandora_object_properties_form_alter().
  */
