@@ -1,0 +1,25 @@
+<?php
+/**
+ * Implements hook_schema().
+ */
+function islandora_unpublish_schema() {
+  $schema['islandora_unpublish_collections'] = array(
+    'description' => 'Table that stores pids of unpublished collections.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The UID.',
+      ),
+      'pid' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'islandora pid.',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
