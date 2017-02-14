@@ -83,5 +83,15 @@ function islandora_collection_toggle_publish_islandora_object_ingested($islandor
   module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');  
   if (!variable_get('islandora_collection_toggle_publish_by_default', TRUE)){
     islandora_collection_toggle_publish_unpublish_collection($islandora_object->id);
+    $multisites = variable_get('islandora_collection_toggle_publish_multisites_to_update','');
+    if (!empty($multisites)) {
+      foreach (explode(',', $multisites) as $site) {
+	$drupal_root = DRUPAL_ROOT;
+	$pid         = $islandora_object->id;
+        $op          = $submitted ? 'publish' : 'unpublish';
+        $command     = "cd $drupal_root/sites/$site && drush ict-pub $op --pid=$pid";
+        exec($command);
+      }
+    }
   }
 }
