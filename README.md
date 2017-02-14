@@ -12,3 +12,6 @@ Islandora module providing a publish/unpublish toggle for collections.
 - `Published by default`: Whether new collections are published or unpublished at ingest.
 - `multisite locations`: (for use in a multisite deployment) Comma-separated list of other sites to update when a collection is set published/unpublished.
 
+#### Use
+
+Publish/unpublish a collection by actuating the checkbox on its `properties` form: `/islandora/object/<PID>/manage/properties`.
