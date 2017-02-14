@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Drush interface to ip_embargo functionality.
+ */
+
+/**
+ * Drush commands declaration.
+ *
+ * @return array
+ *   drush commands data
+ */
+function islandora_ip_embargo_drush_command() {
+  $items = array();
+  $items['islandora-ip-embargo-addRange'] = array(
+    'description' => 'Add a network address range to the embargo list.',
+    'options' => array(
+      'low' => array(
+        'description' => 'First address in the IP range (e.g, "172.16.0.0").',
+        'required' => 'TRUE',
+      ),
+      'high' => array(
+        'description' => 'Last address in the IP range (e.g., "172.16.255.255").',
+        'required' => 'TRUE',
+      ),
+      'list' => array(
+        'description' => 'Name of the list to add this range to (will be created if necessary).',
+        'required' => 'TRUE',
+      ),
+    ),
+    'aliases' => array('iipeadd'),
+  );
+  return $items;
+}
