@@ -54,34 +54,36 @@ function islandora_collection_toggle_publish_form_islandora_object_properties_fo
 /**
  * Implements hook_islandora_object_access().
  *
- * Checks for an IP address embargo and handles redirects if necessary.
  */
 function islandora_collection_toggle_publish_islandora_object_access($op, $islandora_object, $user) {
+  return grant_access($islandora_object);
+}
+
+/**
+ * Implements hook_islandora_object_access().
+ *
+ */
+function islandora_collection_toggle_publish_islandora_datastream_access($op, $islandora_ds, $user) {
+  if($islandora_ds->id == 'JP2') return TRUE;
+  return grant_access($islandora_ds->parent);
+}
+
+function grant_access($islandora_object) {
   module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
-  $relationships = $islandora_object->relationships->get();
+  $djip = variable_get('islandora_ip_embargo_djatoka_public_ip_address', '127.0.0.1');
+  if (ip_address() == $djip) {
+    return TRUE;
+  }
   if (is_collection($islandora_object)) {
     $pid = $islandora_object->id;
   }
   else {
     $pid = get_parent_collection($islandora_object);
   }
-  return islandora_collection_toggle_publish_collection_is_published($pid) || user_access(ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED) ? NULL : FALSE;
-}
-
-/**
- * Implements hook_islandora_object_access().
- *
- * Checks for an IP address embargo and handles redirects if necessary.
- */
-function islandora_collection_toggle_publish_islandora_datastream_access($op, $islandora_ds, $user) {
-  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
-  if (is_collection($islandora_ds->parent)) {
-    $pid = $islandora_ds->parent->id;
-  }
-  else {
-    $pid = get_parent_collection($islandora_ds->parent);
-  }
-  return islandora_collection_toggle_publish_collection_is_published($pid) || user_access(ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED) ? NULL : FALSE;
+  $published = islandora_collection_toggle_publish_collection_is_published($pid);
+  $has_permission = user_access(ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED);
+  $access = ($published || $has_permission) ? TRUE : FALSE;
+  return $access;
 }
 
 function islandora_collection_toggle_publish_islandora_object_ingested($islandora_object) {
