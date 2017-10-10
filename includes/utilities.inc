@@ -47,13 +47,32 @@ function islandora_collection_toggle_publish_publish_collection ($pid) {
  * @return boolean
  */
 function is_collection($islandora_object) {
+  $pid = $islandora_object->id;
+  $is_collection = &drupal_static(__FUNCTION__ . '_is_collection');
+  if (!isset($is_collection)) {
+    if (FALSE !== ($cache = cache_get('islandora_collection_toggle_publish_is_collection'))) {
+      $is_collection = $cache->data;
+    }
+    else {
+      $is_collection = array();
+    }
+  }
+
+  if (!empty($is_collection) && array_key_exists($pid, $is_collection)) {
+    return $is_collection[$pid];
+  }
+
   $models = $islandora_object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
   foreach ($models as $model) {
     if ($model['object']['value'] === "islandora:collectionCModel") {
-      return TRUE;
+      $is_collection[$pid] = TRUE;
+      cache_set('islandora_collection_toggle_publish_is_collection', $is_collection, 'cache', CACHE_PERMANENT);
+      return $is_collection[$pid];
     }
   }
-  return FALSE;
+  $is_collection[$pid] = FALSE;
+  cache_set('islandora_collection_toggle_publish_is_collection', $is_collection, 'cache', CACHE_PERMANENT);
+  return $is_collection[$pid];
 }
 
 function get_parent_collection ($islandora_object) {
