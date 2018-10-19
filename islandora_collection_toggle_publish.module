@@ -87,7 +87,7 @@ function grant_access($islandora_object) {
 }
 
 function islandora_collection_toggle_publish_islandora_object_ingested($islandora_object) {
-  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');  
+  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
   if (!variable_get('islandora_collection_toggle_publish_by_default', TRUE)){
     islandora_collection_toggle_publish_unpublish_collection($islandora_object->id);
     $multisites = variable_get('islandora_collection_toggle_publish_multisites_to_update','');
@@ -101,4 +101,28 @@ function islandora_collection_toggle_publish_islandora_object_ingested($islandor
       }
     }
   }
+}
+
+function islandora_collection_toggle_publish_islandora_solr_results_alter(&$search_results) {
+  $found_pids = array();
+  $publish =[];
+  $query = db_query('select *  FROM islandora_collection_toggle_publish_collections');
+  $unpublished = $query->fetchAll();
+  $unpub_array = array();
+  foreach ($unpublished as $item) {
+    $unpub_array[$item->pid] = $item->pid;
+  }
+  foreach ($search_results as $key => $value) {
+    $found_pids[] = $value['PID'];
+  }
+  foreach ($found_pids as $pid) {
+    if (isset($unpub_array[$pid])) {
+      foreach ($search_results as $key => $value) {
+        if ($value['PID'] == $pid) {
+          unset($search_results[$key]);
+        }
+      }
+    }
+  }
+  return $search_results;
 }
