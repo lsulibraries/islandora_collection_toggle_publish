@@ -119,10 +119,14 @@ function islandora_collection_toggle_publish_islandora_solr_results_alter(&$sear
     if (isset($unpub_array[$pid])) {
       foreach ($search_results as $key => $value) {
         if ($value['PID'] == $pid) {
-          unset($search_results[$key]);
+          $search_results[$key]['thumbnail_url'] = "/islandora/object/islandora%3Aroot/datastream/TN/view";
+          $search_results[$key]['solr_doc'] = array(
+            'dc.title' => 'Object is currently unpublished.',
+          );
+          $search_results[$key]['object_url'] = 'This object is unpublished';
+          $search_results[$key]['object_label'] = 'This object is unpublished';
         }
       }
     }
   }
-  return $search_results;
 }
