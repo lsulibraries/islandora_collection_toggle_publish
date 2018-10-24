@@ -40,16 +40,20 @@ function islandora_collection_toggle_publish_menu() {
 /**
  * Implements hook_form_islandora_object_properties_form_alter().
  */
-function islandora_collection_toggle_publish_form_islandora_object_properties_form_alter(array &$form, array &$form_state) {
-  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
-  $form['islandora_collection_toggle_publish_is_published'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Publish',
-    '#description' => t('Check this to make the collection available to the public.'),
-    '#default_value' => islandora_collection_toggle_publish_collection_is_published($form['pid']['#value']) ? TRUE : FALSE,
-  );
-  array_unshift($form['#submit'], 'islandora_collection_toggle_publish_properties');
-}
+ function islandora_collection_toggle_publish_form_islandora_object_properties_form_alter(array &$form, array &$form_state) {
+   $obj = islandora_object_load($form['pid']['#value']);
+   $models = $obj->models;
+   if (in_array('islandora:collectionCModel', $models)) {
+     module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
+     $form['islandora_collection_toggle_publish_is_published'] = array(
+       '#type' => 'checkbox',
+       '#title' => 'Publish',
+       '#description' => t('Check this to make the collection available to the public.'),
+       '#default_value' => islandora_collection_toggle_publish_collection_is_published($form['pid']['#value']) ? TRUE : FALSE,
+     );
+     array_unshift($form['#submit'], 'islandora_collection_toggle_publish_properties');
+   }
+ }
 
 /**
  * Implements hook_islandora_object_access().
@@ -87,7 +91,7 @@ function grant_access($islandora_object) {
 }
 
 function islandora_collection_toggle_publish_islandora_object_ingested($islandora_object) {
-  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');  
+  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
   if (!variable_get('islandora_collection_toggle_publish_by_default', TRUE)){
     islandora_collection_toggle_publish_unpublish_collection($islandora_object->id);
     $multisites = variable_get('islandora_collection_toggle_publish_multisites_to_update','');
