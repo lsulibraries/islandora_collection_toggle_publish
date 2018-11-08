@@ -42,7 +42,7 @@ function islandora_collection_toggle_publish_publish_collection ($pid) {
 
 
 /**
- * 
+ *
  * @param type $islandora_object
  * @return boolean
  */

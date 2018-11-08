@@ -87,6 +87,7 @@ function grant_access($islandora_object) {
   $published = islandora_collection_toggle_publish_collection_is_published($pid);
   $has_permission = user_access(ISLANDORA_COLLECTION_TOGGLE_PUBLISH_ADMINISTER_UNPUBLISHED);
   $access = ($published || $has_permission) ? TRUE : FALSE;
+
   return $access;
 }
 
@@ -108,26 +109,28 @@ function islandora_collection_toggle_publish_islandora_object_ingested($islandor
 }
 
 function islandora_collection_toggle_publish_islandora_solr_results_alter(&$search_results) {
+  module_load_include('inc', 'islandora_collection_toggle_publish', 'includes/utilities');
   $found_pids = array();
   $publish = [];
   $unpub_array = array();
+  // foreach ($search_results as $key => $value) {
+  //   $obj = islandora_object_load($value['PID']);
+  //   if (grant_access($obj))  {
+  //     $found_pids[] = $value['PID'];
+  //   }
+  // }
   foreach ($search_results as $key => $value) {
-    $obj = islandora_object_load($value['PID']);
-    if (grant_access($obj))  {
-      $found_pids[] = $value['PID'];
+    if (!is_collection(islandora_object_load($value['PID']))) {
+      $check = get_parent_collection(islandora_object_load($value['PID']));
     }
-  }
-  foreach ($found_pids as $pid) {
-    foreach ($search_results as $key => $value) {
-      if ($value['PID'] == $pid && grant_access(islandora_object_load($value['PID']))) {
-        $search_results[$key]['thumbnail_url'] = "/islandora/object/islandora%3Aroot/datastream/TN/view";
-        $search_results[$key]['solr_doc'] = array(
-          'dc.title' => 'Object is currently unpublished.',
-        );
-        $search_results[$key]['object_url'] = '';
-        $search_results[$key]['object_label'] = 'This object is unpublished';
-        $search_results[$key]['published'] = 'unpublished';
-      }
+    if (!islandora_collection_toggle_publish_collection_is_published($value['PID']) || !islandora_collection_toggle_publish_collection_is_published($check) ) {
+      $search_results[$key]['thumbnail_url'] = "/islandora/object/islandora%3Aroot/datastream/TN/view";
+      $search_results[$key]['solr_doc'] = array(
+        'dc.title' => 'Object is currently unpublished.',
+      );
+      $search_results[$key]['object_url'] = '';
+      $search_results[$key]['object_label'] = 'This object is unpublished';
+      $search_results[$key]['published'] = 'unpublished';
     }
   }
 }
