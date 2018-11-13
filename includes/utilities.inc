@@ -42,7 +42,7 @@ function islandora_collection_toggle_publish_publish_collection ($pid) {
 
 
 /**
- * 
+ * //why not just pass in pids to these fn?
  * @param type $islandora_object
  * @return boolean
  */
@@ -56,6 +56,7 @@ function is_collection($islandora_object) {
   return FALSE;
 }
 
+//why not just pass in pids to these fn?
 function get_parent_collection ($islandora_object) {
   $rels = $islandora_object->relationships->get("info:fedora/fedora-system:def/relations-external#", "isMemberOfCollection");
   foreach ($rels as $collection) {
