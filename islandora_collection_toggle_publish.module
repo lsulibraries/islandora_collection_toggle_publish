@@ -121,18 +121,19 @@ function islandora_collection_toggle_publish_islandora_solr_results_alter(&$sear
      $not_pub_parent = !islandora_collection_toggle_publish_collection_is_published($check);
     if ($not_pub || $not_pub_parent) {
       $search_results[$key]['thumbnail_url'] = "/islandora/object/islandora%3Aroot/datastream/TN/view";
+      $search_results[$key]['solr_doc'] = array();
+      $search_results[$key]['solr_doc']['dc.title'] ='Object is currently unpublished.';
       if (isset($search_results[$key]['solr_doc'])) {
         // dpm($search_results[$key]['solr_doc']);
-        $search_results[$key]['solr_doc'] = array('dc.title' => 'Object is currently unpublished.');
         // dpm($search_results[$key]['solr_doc']);
-        return;
+        // return;
       }
       // dpm($search_results[$key]);
       // return;
 
       $search_results[$key]['object_url'] = '';
       $search_results[$key]['object_label'] = 'This object is unpublished';
-      $search_results[$key]['published'] = 'unpublished';
+      $search_results[$key]['unpublished'] = TRUE;
     }
   }
 }

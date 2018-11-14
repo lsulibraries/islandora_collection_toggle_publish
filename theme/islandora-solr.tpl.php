@@ -20,15 +20,19 @@
       <div class="islandora-solr-search-result clear-block <?php print $row_result % 2 == 0 ? 'odd' : 'even'; ?>">
         <div class="islandora-solr-search-result-inner">
           <!-- Thumbnail -->
-          <dl class="solr-thumb <?php if(isset($result['published'])) :?><?php print $result['published'];?><?php endif;?>">
+          <dl class="solr-thumb <?php if(isset($result['unpublished'])) :?><?php print 'unpublished'; ?><?php endif;?>">
             <dt>
               <?php print $result['thumbnail']; ?>
             </dt>
             <dd></dd>
           </dl>
           <!-- Metadata -->
+          <?php dpm($result); ?>
+          <?php dpm($result['solr_doc']); ?>
           <dl class="solr-fields islandora-inline-metadata">
             <?php foreach($result['solr_doc'] as $key => $value): ?>
+              <?php var_dump('marco-polo'); die();?>
+
               <dt class="solr-label <?php print $value['class'];?> <?php if(isset($result['published'])) :?><?php print $result['published'];?><?php endif;?>">
                 <?php print $value['label']; ?>
               </dt>
