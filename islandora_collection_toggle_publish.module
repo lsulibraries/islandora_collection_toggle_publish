@@ -117,6 +117,9 @@ function islandora_collection_toggle_publish_islandora_solr_results_alter(&$sear
     if (!is_collection(islandora_object_load($value['PID']))) {
       $check = get_parent_collection(islandora_object_load($value['PID']));
     }
+    else{
+      $check = $value['PID'];
+    }
     if (!islandora_collection_toggle_publish_collection_is_published($value['PID']) || !islandora_collection_toggle_publish_collection_is_published($check) ) {
       $search_results[$key]['thumbnail_url'] = "/islandora/object/islandora%3Aroot/datastream/TN/view";
       $search_results[$key]['solr_doc'] = array(
